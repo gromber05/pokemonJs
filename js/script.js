@@ -2,20 +2,33 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     const bttnBuscar = document.getElementById("buscar");
+    const resultadosDiv = document.getElementById("resultados");
 
     bttnBuscar.addEventListener("click", () => {
         const nombrePokemon = document.getElementById("nombrePokemon").value;
-        alert(nombrePokemon);
         fetch('https://pokeapi.co/api/v2/pokemon/'+nombrePokemon)
             .then(response => response.json())
             .then(data => {
-                console.log('Datos de' + nombrePokemon + ": ", data);
-                console.log('Nombre:', data.name);
-                console.log('Altura:', data.height);
-                console.log('Peso:', data.weight);
+
+                const tipos = data.types.map(tipoInfo => tipoInfo.type.name)
+
+                resultadosDiv.innerHTML =
+                    `
+                        <div>
+                            <h2>Datos de: ${nombrePokemon}</h2>
+                            <p>Nombre: ${data.name}</p>
+                            <p>Altura: ${data.height}m</p>
+                            <p>Peso: ${data.weight}kg</p>
+                            <p>Tipos: ${tipos.join(", ")}</p>
+                            <img src="${data.sprites.front_default}">
+                            <img src="${data.sprites.back_default}">
+                        </div>
+                    `;
+
+                resultadosDiv.style.display = "block";    
             })
             .catch(error => {
-                console.error('Error al obtener el Pokémon:', error);
+                alert('Error al obtener el Pokémon:' + error);
             });
 
         /* Explicación del ejemplo:
